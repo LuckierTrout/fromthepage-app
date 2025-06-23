@@ -7,11 +7,11 @@ services:
     platform: "linux/amd64"
     env_file: ./local.env
     environment:
-    - PASSENGER_APP_ENV=development
+    - PASSENGER_APP_ENV=production
     depends_on:
     - "mysql"
     ports:
-    - "3000:80"
+    - "8080:80"
     volumes:
       - fromthepage_logs:/home/app/fromthepage/log
       - fromthepage_tmp:/home/app/fromthepage/tmp
@@ -19,7 +19,7 @@ services:
       - fromthepage_public_images_uploaded:/home/app/fromthepage/public/images/uploaded
       - fromthepage_public_uploads:/home/app/fromthepage/public/uploads
       - fromthepage_public_text:/home/app/fromthepage/public/text
-    # restart: always
+    restart: unless-stopped
 
   mysql:
     image: mysql:5.7
@@ -32,7 +32,7 @@ services:
     volumes:
     - fromthepage_mysql_data:/var/lib/mysql
     - ./data:/docker-entrypoint-initdb.d
-    restart: always
+    restart: unless-stopped
 
 volumes:
   fromthepage_mysql_data:
